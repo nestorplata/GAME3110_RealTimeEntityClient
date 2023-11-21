@@ -11,7 +11,8 @@ public class NetworkClient : MonoBehaviour
     NetworkPipeline reliableAndInOrderPipeline;
     NetworkPipeline nonReliableNotInOrderedPipeline;
     const ushort NetworkPort = 9001;
-    const string IPAddress = "192.168.2.41";
+    const string IPAddress = "192.168.1.15";
+        //"192.168.2.41";
 
     void Start()
     {
@@ -122,6 +123,7 @@ public class NetworkClient : MonoBehaviour
         networkConnection = default(NetworkConnection);
         NetworkEndPoint endpoint = NetworkEndPoint.Parse(IPAddress, NetworkPort, NetworkFamily.Ipv4);
         networkConnection = networkDriver.Connect(endpoint);
+
     }
 
     public bool IsConnected()

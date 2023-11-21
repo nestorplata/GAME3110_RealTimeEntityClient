@@ -12,8 +12,14 @@ public class CircleClick : MonoBehaviour
     {
         
     }
-    void OnMouseDown()
+    public void OnMouseDown()
     {
-        Destroy(gameObject);
+        if (NetworkClientProcessing.GetGameLogic().GetIsConnected())
+        {
+            NetworkClientProcessing.GetGameLogic().SendMessageToServer(ClientToServerSignifiers.BallonPopped,
+                NetworkClientProcessing.GetGameLogic().ScreenPositionToPorcentage(transform.position));
+            Destroy(gameObject);
+        }
+
     }
 }

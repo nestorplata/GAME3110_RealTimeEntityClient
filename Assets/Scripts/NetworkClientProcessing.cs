@@ -9,18 +9,37 @@ static public class NetworkClientProcessing
     static public void ReceivedMessageFromServer(string msg, TransportPipeline pipeline)
     {
         Debug.Log("Network msg received =  " + msg + ", from pipeline = " + pipeline);
-
         string[] csv = msg.Split(',');
         int signifier = int.Parse(csv[0]);
 
-        // if (signifier == ServerToClientSignifiers.asd)
-        // {
+        //if()
+        switch (signifier)
+        {
+            case ServerToClientSignifiers.simpleMessage:
+                Debug.Log(csv[1]);
+                break;
+            case ServerToClientSignifiers.OtherBallonSpawned:
+            case ServerToClientSignifiers.OtherBallonPopped:
 
-        // }
-        // else if (signifier == ServerToClientSignifiers.asd)
-        // {
+                string[] pos = csv[1].Split('_');
+                Vector2 Ballonpos = new Vector2(float.Parse(pos[0]), float.Parse(pos[1]));
+                if(signifier ==ServerToClientSignifiers.OtherBallonSpawned)
+                {
+                    gameLogic.SpawnNewBalloon(Ballonpos);
+                }
+                else
+                {
+                    gameLogic.DeleteBallon(Ballonpos);
+                }
+                break;
+            case ServerToClientSignifiers.GettingScreen:
+                gameLogic.GetAllBallons(int.Parse(csv[1]));
+                break;
+            case ServerToClientSignifiers.SettingScreen:
+                gameLogic.SetAllBallons(csv[1]);
+                break;
 
-        // }
+            }
 
         //gameLogic.DoSomething();
 
@@ -37,10 +56,13 @@ static public class NetworkClientProcessing
     static public void ConnectionEvent()
     {
         Debug.Log("Network Connection Event!");
+        gameLogic.ToogleIsConnected();
     }
     static public void DisconnectionEvent()
     {
         Debug.Log("Network Disconnection Event!");
+        gameLogic.ToogleIsConnected();
+
     }
     static public bool IsConnectedToServer()
     {
@@ -74,6 +96,11 @@ static public class NetworkClientProcessing
         gameLogic = GameLogic;
     }
 
+    static public GameLogic GetGameLogic()
+    {
+        return gameLogic;
+    }
+
     #endregion
 
 }
@@ -81,12 +108,18 @@ static public class NetworkClientProcessing
 #region Protocol Signifiers
 static public class ClientToServerSignifiers
 {
-    public const int asd = 1;
+    public const int BallonSpawned = 0;
+    public const int BallonPopped = 1;
+    public const int SendingScreen = 2;
 }
 
 static public class ServerToClientSignifiers
 {
-    public const int asd = 1;
+    public const int simpleMessage = -1;
+    public const int OtherBallonSpawned = 0;
+    public const int OtherBallonPopped = 1;
+    public const int GettingScreen = 2;
+    public const int SettingScreen = 3;
 }
 
 #endregion
