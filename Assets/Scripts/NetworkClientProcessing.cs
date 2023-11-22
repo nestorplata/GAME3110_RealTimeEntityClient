@@ -15,22 +15,16 @@ static public class NetworkClientProcessing
         //if()
         switch (signifier)
         {
-            case ServerToClientSignifiers.simpleMessage:
-                Debug.Log(csv[1]);
+            case ServerToClientSignifiers.SettingMainPlayer:
+                gameLogic.SetAsMainPlayer();
                 break;
             case ServerToClientSignifiers.OtherBallonSpawned:
-            case ServerToClientSignifiers.OtherBallonPopped:
-
                 string[] pos = csv[1].Split('_');
-                Vector2 Ballonpos = new Vector2(float.Parse(pos[0]), float.Parse(pos[1]));
-                if(signifier ==ServerToClientSignifiers.OtherBallonSpawned)
-                {
-                    gameLogic.SpawnNewBalloon(Ballonpos);
-                }
-                else
-                {
-                    gameLogic.DeleteBallon(Ballonpos);
-                }
+                Vector2 BallonPorcentage = new Vector2(float.Parse(pos[0]), float.Parse(pos[1]));
+                gameLogic.SpawnNewBalloon(BallonPorcentage);
+                break;
+            case ServerToClientSignifiers.OtherBallonPopped:
+                gameLogic.DeleteBallon(int.Parse(csv[1]));
                 break;
             case ServerToClientSignifiers.GettingScreen:
                 gameLogic.GetAllBallons(int.Parse(csv[1]));
@@ -39,7 +33,7 @@ static public class NetworkClientProcessing
                 gameLogic.SetAllBallons(csv[1]);
                 break;
 
-            }
+        }
 
         //gameLogic.DoSomething();
 
@@ -56,12 +50,12 @@ static public class NetworkClientProcessing
     static public void ConnectionEvent()
     {
         Debug.Log("Network Connection Event!");
-        gameLogic.ToogleIsConnected();
+        //gameLogic.ToogleIsMainPlayer();
     }
     static public void DisconnectionEvent()
     {
         Debug.Log("Network Disconnection Event!");
-        gameLogic.ToogleIsConnected();
+        //gameLogic.ToogleIsMainPlayer();
 
     }
     static public bool IsConnectedToServer()
@@ -115,7 +109,7 @@ static public class ClientToServerSignifiers
 
 static public class ServerToClientSignifiers
 {
-    public const int simpleMessage = -1;
+    public const int SettingMainPlayer = -1;
     public const int OtherBallonSpawned = 0;
     public const int OtherBallonPopped = 1;
     public const int GettingScreen = 2;

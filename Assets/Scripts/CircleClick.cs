@@ -4,22 +4,13 @@ using UnityEngine;
 
 public class CircleClick : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-    void Update()
-    {
-        
-    }
     public void OnMouseDown()
     {
-        if (NetworkClientProcessing.GetGameLogic().GetIsConnected())
-        {
-            NetworkClientProcessing.GetGameLogic().SendMessageToServer(ClientToServerSignifiers.BallonPopped,
-                NetworkClientProcessing.GetGameLogic().ScreenPositionToPorcentage(transform.position));
-            Destroy(gameObject);
-        }
+        GameLogic gameLogic= NetworkClientProcessing.GetGameLogic();
 
+        gameLogic.SendMessageToServer(ClientToServerSignifiers.BallonPopped,
+            gameLogic.GetBallonID(gameObject)+"");
+
+        gameLogic.DeleteBallon(gameObject);
     }
 }
