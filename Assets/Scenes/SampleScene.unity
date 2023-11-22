@@ -289,6 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BalloonList: []
+  durationUntilNextBalloon: 2
 --- !u!4 &1186803776
 Transform:
   m_ObjectHideFlags: 0
